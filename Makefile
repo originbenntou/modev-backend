@@ -28,10 +28,13 @@ run:
 
 swagger:
 	docker run --rm --name openapi -d \
-		-p 8080:8080 \
+		-p 8081:8080 \
 		-v $(PWD):/tmp \
 		-e SWAGGER_FILE=/tmp/openapi.yaml \
 		--platform=linux/amd64 \
 		--name swagger \
 		swaggerapi/swagger-editor
-	open http://localhost:8080
+	open http://localhost:8081
+
+codegen:
+	oapi-codegen -package generated ./api.yaml > ./generated/api.go

@@ -1,0 +1,13 @@
+FROM golang:1.20.1
+
+WORKDIR /go/src/github.com/originbenntou/modev-backend
+
+ENV GO111MODULE on
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY . .
+
+RUN go install github.com/cosmtrek/air@v1.40.4
+CMD [ "air", "-c", "air.toml" ]
