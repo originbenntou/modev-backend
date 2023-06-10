@@ -8,6 +8,14 @@ PWD:=$(shell pwd)
 
 
 .PHONY: $(shell egrep -o ^[a-zA-Z_-]+: $(MAKEFILE_LIST) | sed 's/://')
+setup:
+	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
+	go mod tidy
+
+gen:
+	oapi-codegen -config ./gen/model.config.yaml openapi.yaml
+	oapi-codegen -config ./gen/server.config.yaml openapi.yaml
+
 build:
 	docker build -t $(AWS_REPOSITORY) . --platform=linux/amd64
 

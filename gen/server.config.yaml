@@ -1,0 +1,9 @@
+package: gen
+generate: # https://github.com/deepmap/oapi-codegen/blob/master/cmd/oapi-codegen/oapi-codegen.go#L441
+  chi-server: true
+  strict-server: true
+  embedded-spec: true
+output: gen/server.gen.go
+output-options:
+  skip-fmt: true
+  skip-prune: true
