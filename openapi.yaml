@@ -9,8 +9,22 @@ info:
 servers:
   - url: https://api.mototsuka.com/
 tags:
+  - name: health
   - name: tweets
 paths:
+#  /health:
+#    get:
+#      tags:
+#        - health
+#      operationId: getHealth
+#      responses:
+#        200:
+#          description: OK
+#          content:
+#            application/json:
+#              schema:
+#                type: string
+#                example: "OK"
   /tweets:
     get:
       tags:
