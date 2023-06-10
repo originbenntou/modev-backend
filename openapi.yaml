@@ -33,7 +33,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Tweets'
+                  $ref: '#/components/schemas/Tweet'
         400:
           description: Bad Request
           content:
@@ -57,7 +57,7 @@ paths:
 
 components:
   schemas:
-    Tweets:
+    Tweet:
       required:
         - id
         - addDate

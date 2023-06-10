@@ -8,8 +8,8 @@ const (
 	Like GetTweetsParamsCategory = "like"
 )
 
-// Tweets defines model for Tweets.
-type Tweets struct {
+// Tweet defines model for Tweet.
+type Tweet struct {
 	AddDate string    `json:"addDate"`
 	Id      int64     `json:"id"`
 	Tags    *[]string `json:"tags,omitempty"`

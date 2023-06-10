@@ -5,5 +5,4 @@ generate: # https://github.com/deepmap/oapi-codegen/blob/master/cmd/oapi-codegen
   embedded-spec: true
 output: gen/server.gen.go
 output-options:
-  skip-fmt: true
   skip-prune: true
