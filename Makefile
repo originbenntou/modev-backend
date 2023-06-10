@@ -5,6 +5,7 @@ AWS_REGION?=ap-northeast-1
 AWS_REPOSITORY:=modev-backend
 TAG:=$(shell git rev-parse --short HEAD)
 PWD:=$(shell pwd)
+DATABASE=mysql://root@tcp(mysql:3306)/modev?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=true
 
 
 .PHONY: $(shell egrep -o ^[a-zA-Z_-]+: $(MAKEFILE_LIST) | sed 's/://')
@@ -15,6 +16,40 @@ setup:
 gen:
 	oapi-codegen -config ./gen/model.config.yaml openapi.yaml
 	oapi-codegen -config ./gen/server.config.yaml openapi.yaml
+
+migrate-create:
+	docker run \
+		-v ${PWD}/mysql/migrations:/migrations \
+		migrate/migrate \
+		create -ext sql -dir /migrations -seq initialize
+
+migrate-up:
+	docker run \
+		-v ${PWD}/mysql/migrations:/migrations \
+		--network modev-backend-network \
+		migrate/migrate \
+		-path=/migrations/ \
+		-database "${DATABASE}" \
+		up
+
+migrate-drop:
+	docker run \
+		-v ${PWD}/mysql/migrations:/migrations \
+		--network modev-backend-network \
+		migrate/migrate \
+		-path=/migrations/ \
+		-database "${DATABASE}" \
+		drop -f
+
+swagger:
+	docker run --rm --name openapi -d \
+		-p 8081:8080 \
+		-v $(PWD):/tmp \
+		-e SWAGGER_FILE=/tmp/openapi.yaml \
+		--platform=linux/amd64 \
+		--name swagger \
+		swaggerapi/swagger-editor
+	open http://localhost:8081
 
 build:
 	docker build -t $(AWS_REPOSITORY) . --platform=linux/amd64
@@ -33,16 +68,3 @@ push:
 
 run:
 	docker run -it $(AWS_ACCOUNT).dkr.ecr.$(AWS_REGION).amazonaws.com/$(AWS_REPOSITORY):$(TAG)
-
-swagger:
-	docker run --rm --name openapi -d \
-		-p 8081:8080 \
-		-v $(PWD):/tmp \
-		-e SWAGGER_FILE=/tmp/openapi.yaml \
-		--platform=linux/amd64 \
-		--name swagger \
-		swaggerapi/swagger-editor
-	open http://localhost:8081
-
-codegen:
-	oapi-codegen -package generated ./api.yaml > ./generated/api.go
