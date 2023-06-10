@@ -19,13 +19,13 @@ gen:
 
 migrate-create:
 	docker run \
-		-v ${PWD}/mysql/migrations:/migrations \
+		-v ${PWD}/mysql/migrate:/migrations \
 		migrate/migrate \
 		create -ext sql -dir /migrations -seq initialize
 
 migrate-up:
 	docker run \
-		-v ${PWD}/mysql/migrations:/migrations \
+		-v ${PWD}/mysql/migrate:/migrations \
 		--network modev-backend-network \
 		migrate/migrate \
 		-path=/migrations/ \
@@ -34,10 +34,8 @@ migrate-up:
 
 migrate-drop:
 	docker run \
-		-v ${PWD}/mysql/migrations:/migrations \
 		--network modev-backend-network \
 		migrate/migrate \
-		-path=/migrations/ \
 		-database "${DATABASE}" \
 		drop -f
 
