@@ -25,7 +25,7 @@ var prdEnv []byte
 
 // Config represents configuration root.
 type Config struct {
-	AppEnv   string
+	Env      string
 	HTTP     HTTP `toml:"http"`
 	AWS      AWS  `toml:"aws"`
 	Database Database
@@ -50,7 +50,7 @@ func GetConfig() *Config {
 // NewConfig is a function to init and load Configuration from file or environment variables.
 func NewConfig() (*Config, error) {
 	conf := &Config{}
-	conf.AppEnv = "local"
+	conf.Env = "local"
 
 	loadFromEnv(conf)
 
@@ -61,7 +61,7 @@ func NewConfig() (*Config, error) {
 
 	err = loadFromTomlEnv(conf)
 	if err != nil {
-		return nil, errors.Wrapf(err, "fail loadFromToml env=%v", conf.AppEnv)
+		return nil, errors.Wrapf(err, "fail loadFromToml env=%v", conf.Env)
 	}
 
 	loadDatabaseConfig(conf)
@@ -70,7 +70,7 @@ func NewConfig() (*Config, error) {
 }
 
 func loadFromToml(tml []byte, conf *Config) error {
-	_, err := toml.DecodeReader(bytes.NewBuffer(tml), conf)
+	_, err := toml.NewDecoder(bytes.NewBuffer(tml)).Decode(conf)
 	if err != nil {
 		return errors.Wrap(err, "fail to decode toml")
 	}
@@ -79,7 +79,7 @@ func loadFromToml(tml []byte, conf *Config) error {
 }
 
 func loadFromTomlEnv(conf *Config) error {
-	switch conf.AppEnv {
+	switch conf.Env {
 	case "local":
 		return loadFromToml(localEnv, conf)
 	case "dev":
@@ -92,10 +92,10 @@ func loadFromTomlEnv(conf *Config) error {
 }
 
 func loadFromEnv(conf *Config) {
-	appEnv := os.Getenv("APP_ENV")
-	if appEnv != "" {
-		conf.AppEnv = appEnv
+	env := os.Getenv("ENV")
+	if env != "" {
+		conf.Env = env
 	}
 
-	fmt.Printf("conf.AppEnv: %v\n", conf.AppEnv)
+	fmt.Printf("conf.Env: %v\n", conf.Env)
 }

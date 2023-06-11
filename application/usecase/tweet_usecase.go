@@ -4,10 +4,11 @@ import (
 	"context"
 	"github.com/originbenntou/modev-backend/application/service"
 	"github.com/originbenntou/modev-backend/domain/model"
+	"github.com/originbenntou/modev-backend/gen"
 )
 
 type TweetUseCase interface {
-	FindByCategory(ctx context.Context, category string) (*model.Tweet, error)
+	FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error)
 }
 
 type tweetUseCase struct {
@@ -20,10 +21,10 @@ func NewTweetUseCase(t service.TweetService) TweetUseCase {
 	}
 }
 
-func (u *tweetUseCase) FindByCategory(ctx context.Context, category string) (*model.Tweet, error) {
-	tt, err := u.TweetService.FindByCategory(ctx, category)
+func (u *tweetUseCase) FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error) {
+	tweets, err := u.TweetService.FindByCategory(ctx, category)
 	if err != nil {
 		return nil, err
 	}
-	return tt, nil
+	return tweets, nil
 }

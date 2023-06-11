@@ -2,13 +2,13 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/originbenntou/modev-backend/domain/model"
 	"github.com/originbenntou/modev-backend/domain/repository"
+	"github.com/originbenntou/modev-backend/gen"
 )
 
 type TweetService interface {
-	FindByCategory(ctx context.Context, category string) (*model.Tweet, error)
+	FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error)
 }
 
 type tweetService struct {
@@ -21,13 +21,11 @@ func NewTweetService(t repository.TweetRepository) TweetService {
 	}
 }
 
-func (s *tweetService) FindByCategory(ctx context.Context, category string) (*model.Tweet, error) {
-	tt, err := s.TweetRepository.FindByCategory(ctx, category)
+func (s *tweetService) FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error) {
+	tweets, err := s.TweetRepository.FindByCategory(ctx, category)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(tt)
-
-	return tt, nil
+	return tweets, nil
 }

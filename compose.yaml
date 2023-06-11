@@ -10,7 +10,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - "ENV=LOCAL"
+      - "ENV=local"
+      - "DB_HOST=mysql"
+      - "DB_USER=user"
+      - "DB_PASSWORD=password"
     volumes:
       - ./:/go/src/github.com/originbenntou/modev-backend
     depends_on:
@@ -22,9 +25,11 @@ services:
     platform: linux/amd64
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-      TZ: Asia/Tokyo
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: modev
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Tokyo
     ports:
       - "3306:3306"
     volumes:

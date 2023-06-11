@@ -6,6 +6,7 @@ package gen
 // Defines values for GetTweetsParamsCategory.
 const (
 	Like GetTweetsParamsCategory = "like"
+	Own  GetTweetsParamsCategory = "own"
 )
 
 // Tweet defines model for Tweet.

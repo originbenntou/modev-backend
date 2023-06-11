@@ -19,7 +19,7 @@ func NewTweetController(t usecase.TweetUseCase) *TweetController {
 
 func (c *TweetController) GetTweets(w http.ResponseWriter, r *http.Request, p gen.GetTweetsParams) {
 	ctx := context.Background()
-	tt, err := c.TweetUseCase.FindByCategory(ctx, "aaa")
+	tt, err := c.TweetUseCase.FindByCategory(ctx, p.Category)
 	if err != nil {
 		return
 	}

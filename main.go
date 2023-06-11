@@ -4,6 +4,7 @@ import (
 	"fmt"
 	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/originbenntou/modev-backend/adapter/mysql"
 	"github.com/originbenntou/modev-backend/application/service"
 	"github.com/originbenntou/modev-backend/application/usecase"
 	"github.com/originbenntou/modev-backend/gen"
@@ -24,12 +25,18 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.OapiRequestValidator(swagger))
 
+	db, err := mysql.NewDB()
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error db connection\n: %s", err)
+		os.Exit(1)
+	}
+
 	// TODO: di container
 	server := controller.NewController(
 		controller.NewTweetController(
 			usecase.NewTweetUseCase(
 				service.NewTweetService(
-					database.NewTweetRepository(),
+					database.NewTweetRepository(db),
 				),
 			),
 		),

@@ -4,7 +4,16 @@ import (
 	"os"
 )
 
-// Database represents configuration about database connection.
+const (
+	ConnMaxLifetimeSec = 120
+	MaxOpenConns       = 100
+	MaxIdleConns       = 100
+)
+
+const (
+	DefaultDBName = "modev"
+)
+
 type Database struct {
 	Host     string
 	User     string
@@ -14,17 +23,17 @@ type Database struct {
 }
 
 func loadDatabaseConfig(conf *Config) {
-	if conf.AppEnv == "test" {
+	if conf.Env == "test" {
 		conf.Database.Host = os.Getenv("TEST_DB_HOST")
 		conf.Database.User = os.Getenv("TEST_DB_USER")
 		conf.Database.Password = os.Getenv("TEST_DB_PASSWORD")
 		conf.Database.Port = 3307
-		conf.Database.Name = "user_test"
+		conf.Database.Name = DefaultDBName
 	} else {
-		conf.Database.Host = os.Getenv("USER_DB_HOST")
-		conf.Database.User = os.Getenv("USER_DB_USER")
-		conf.Database.Password = os.Getenv("USER_DB_PASSWORD")
+		conf.Database.Host = os.Getenv("DB_HOST")
+		conf.Database.User = os.Getenv("DB_USER")
+		conf.Database.Password = os.Getenv("DB_PASSWORD")
 		conf.Database.Port = 3306
-		conf.Database.Name = "user"
+		conf.Database.Name = DefaultDBName
 	}
 }

@@ -5,7 +5,7 @@ AWS_REGION?=ap-northeast-1
 AWS_REPOSITORY:=modev-backend
 TAG:=$(shell git rev-parse --short HEAD)
 PWD:=$(shell pwd)
-DATABASE=mysql://root@tcp(mysql:3306)/modev?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=true
+DATABASE=mysql://root:root@tcp(mysql:3306)/modev?charset=utf8mb4&collation=utf8mb4_general_ci&parseTime=true
 
 
 .PHONY: $(shell egrep -o ^[a-zA-Z_-]+: $(MAKEFILE_LIST) | sed 's/://')
