@@ -24,6 +24,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.OapiRequestValidator(swagger))
 
+	// TODO: di container
 	server := controller.NewController(
 		controller.NewTweetController(
 			usecase.NewTweetUseCase(
@@ -35,6 +36,9 @@ func main() {
 	)
 	gen.HandlerFromMux(server, router)
 
+	// TODO: graceful shutdown
+
+	// TODO: timeout setting
 	err = http.ListenAndServe(":8080", router)
 	if err != nil {
 		return
