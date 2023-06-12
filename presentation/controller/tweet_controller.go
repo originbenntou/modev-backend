@@ -2,7 +2,9 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"github.com/originbenntou/modev-backend/application/usecase"
+	vo "github.com/originbenntou/modev-backend/domain/value_object"
 	"github.com/originbenntou/modev-backend/gen"
 	"net/http"
 )
@@ -19,10 +21,33 @@ func NewTweetController(t usecase.TweetUseCase) *TweetController {
 
 func (c *TweetController) GetTweets(w http.ResponseWriter, r *http.Request, p gen.GetTweetsParams) {
 	ctx := context.Background()
-	tt, err := c.TweetUseCase.FindByCategory(ctx, p.Category)
+
+	category, err := exchangeCategory(p.Category)
 	if err != nil {
+		// FIXME: error respondError
 		return
 	}
 
-	RespondOK(w, tt)
+	tweets, err := c.TweetUseCase.FindByCategory(ctx, category)
+	if err != nil {
+		// FIXME: error respondError
+		return
+	}
+
+	RespondOK(w, tweets)
+}
+
+func exchangeCategory(p gen.GetTweetsParamsCategory) (*vo.Category, error) {
+	var c vo.Category
+
+	switch p {
+	case gen.Own:
+		c = vo.Own
+	case gen.Like:
+		c = vo.Like
+	default:
+		return nil, fmt.Errorf("invalid category: %s", p)
+	}
+
+	return &c, nil
 }

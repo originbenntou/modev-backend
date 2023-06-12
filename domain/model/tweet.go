@@ -1,8 +1,8 @@
 package model
 
-type Tweet struct {
+type TweetModel struct {
 	Id        uint64 `db:"id"`
-	Category  uint8  `db:"category"`
+	Category  int    `db:"category"`
 	AddDate   string `db:"add_date"`
 	Url       string `db:"url"`
 	Tags      []string

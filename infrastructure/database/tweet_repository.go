@@ -6,10 +6,10 @@ import (
 	"github.com/originbenntou/modev-backend/adapter/mysql"
 	"github.com/originbenntou/modev-backend/domain/model"
 	"github.com/originbenntou/modev-backend/domain/repository"
-	"github.com/originbenntou/modev-backend/gen"
+	vo "github.com/originbenntou/modev-backend/domain/value_object"
 )
 
-const TABLE_NAME = "TWEET"
+const TableName = "TWEET"
 
 type tweetRepository struct {
 	db *mysql.DB
@@ -19,7 +19,7 @@ func NewTweetRepository(db *mysql.DB) repository.TweetRepository {
 	return &tweetRepository{db}
 }
 
-func (r *tweetRepository) FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error) {
+func (r *tweetRepository) FindByCategory(ctx context.Context, category *vo.Category) ([]*model.TweetModel, error) {
 	q := fmt.Sprintf(`
 		select
 			id, category, add_date, url, created_at, updated_at
@@ -27,18 +27,18 @@ func (r *tweetRepository) FindByCategory(ctx context.Context, category gen.GetTw
 		    %s
 		where
 		    category = :category
-	`, TABLE_NAME)
+	`, TableName)
 
 	rows, err := r.db.NamedQueryContext(ctx, q, map[string]interface{}{
-		"category": "1", // FIXME
+		"category": category.Value(),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	results := make([]*model.Tweet, 0)
+	results := make([]*model.TweetModel, 0)
 	for rows.Next() {
-		var tweet model.Tweet
+		var tweet model.TweetModel
 		if err := rows.StructScan(&tweet); err != nil {
 			return nil, err
 		}

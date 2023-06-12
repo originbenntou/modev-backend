@@ -3,9 +3,9 @@ package repository
 import (
 	"context"
 	"github.com/originbenntou/modev-backend/domain/model"
-	"github.com/originbenntou/modev-backend/gen"
+	vo "github.com/originbenntou/modev-backend/domain/value_object"
 )
 
 type TweetRepository interface {
-	FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error)
+	FindByCategory(ctx context.Context, category *vo.Category) ([]*model.TweetModel, error)
 }

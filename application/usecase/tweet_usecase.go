@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
-	"github.com/originbenntou/modev-backend/application/service"
-	"github.com/originbenntou/modev-backend/domain/model"
-	"github.com/originbenntou/modev-backend/gen"
+	"github.com/originbenntou/modev-backend/domain/entity"
+	"github.com/originbenntou/modev-backend/domain/service"
+	vo "github.com/originbenntou/modev-backend/domain/value_object"
 )
 
 type TweetUseCase interface {
-	FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error)
+	FindByCategory(ctx context.Context, category *vo.Category) ([]*entity.TweetEntity, error)
 }
 
 type tweetUseCase struct {
@@ -21,7 +21,7 @@ func NewTweetUseCase(t service.TweetService) TweetUseCase {
 	}
 }
 
-func (u *tweetUseCase) FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error) {
+func (u *tweetUseCase) FindByCategory(ctx context.Context, category *vo.Category) ([]*entity.TweetEntity, error) {
 	tweets, err := u.TweetService.FindByCategory(ctx, category)
 	if err != nil {
 		return nil, err
