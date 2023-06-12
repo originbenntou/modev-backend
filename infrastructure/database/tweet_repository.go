@@ -22,7 +22,7 @@ func NewTweetRepository(db *mysql.DB) repository.TweetRepository {
 func (r *tweetRepository) FindByCategory(ctx context.Context, category gen.GetTweetsParamsCategory) ([]*model.Tweet, error) {
 	q := fmt.Sprintf(`
 		select
-			id, category, add_date, url
+			id, category, add_date, url, created_at, updated_at
 		from
 		    %s
 		where
@@ -30,7 +30,7 @@ func (r *tweetRepository) FindByCategory(ctx context.Context, category gen.GetTw
 	`, TABLE_NAME)
 
 	rows, err := r.db.NamedQueryContext(ctx, q, map[string]interface{}{
-		"category": "1",
+		"category": "1", // FIXME
 	})
 	if err != nil {
 		return nil, err
