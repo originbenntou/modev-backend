@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	middleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
+	oapimiddleware "github.com/deepmap/oapi-codegen/pkg/chi-middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/httplog"
 	"github.com/originbenntou/modev-backend/adapter/mysql"
 	"github.com/originbenntou/modev-backend/application/usecase"
 	"github.com/originbenntou/modev-backend/domain/service"
@@ -22,8 +23,13 @@ func main() {
 	}
 
 	swagger.Servers = nil
-	router := chi.NewRouter()
-	router.Use(middleware.OapiRequestValidator(swagger))
+	r := chi.NewRouter()
+	r.Use(oapimiddleware.OapiRequestValidator(swagger))
+
+	logger := httplog.NewLogger("modev-backend", httplog.Options{
+		JSON: true,
+	})
+	r.Use(httplog.RequestLogger(logger))
 
 	db, err := mysql.NewDB()
 	if err != nil {
@@ -41,12 +47,12 @@ func main() {
 			),
 		),
 	)
-	gen.HandlerFromMux(server, router)
+	gen.HandlerFromMux(server, r)
 
 	// TODO: graceful shutdown
 
 	// TODO: timeout setting
-	err = http.ListenAndServe(":8080", router)
+	err = http.ListenAndServe(":8080", r)
 	if err != nil {
 		return
 	}

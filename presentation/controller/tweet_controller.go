@@ -24,17 +24,17 @@ func (c *TweetController) GetTweets(w http.ResponseWriter, r *http.Request, p ge
 
 	category, err := exchangeCategory(p.Category)
 	if err != nil {
-		// FIXME: error respondError
+		RespondError(w, r, err)
 		return
 	}
 
 	tweets, err := c.TweetUseCase.FindByCategory(ctx, category)
 	if err != nil {
-		// FIXME: error respondError
+		RespondError(w, r, err)
 		return
 	}
 
-	RespondOK(w, tweets)
+	RespondOK(w, r, tweets)
 }
 
 func exchangeCategory(p gen.GetTweetsParamsCategory) (*vo.Category, error) {

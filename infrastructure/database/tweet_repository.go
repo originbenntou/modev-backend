@@ -10,7 +10,7 @@ import (
 	"github.com/originbenntou/modev-backend/domain/vo"
 )
 
-const TweetTable = "TWEET"
+const TweetTable = "TWEETaaaaaaaaaaaa"
 const TweetTagTable = "TWEET_TAG"
 const TagTable = "TAG"
 
