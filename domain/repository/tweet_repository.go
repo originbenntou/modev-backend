@@ -7,5 +7,5 @@ import (
 )
 
 type TweetRepository interface {
-	FindByCategory(ctx context.Context, category *vo.Category) ([]*model.TweetModel, error)
+	FindByCategory(ctx context.Context, category *vo.Category) ([]*model.TweetWithTagModel, error)
 }

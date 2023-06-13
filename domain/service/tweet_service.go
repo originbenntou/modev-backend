@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/labstack/gommon/log"
 	"github.com/originbenntou/modev-backend/domain/entity"
 	"github.com/originbenntou/modev-backend/domain/model"
 	"github.com/originbenntou/modev-backend/domain/repository"
@@ -23,51 +24,71 @@ func NewTweetService(t repository.TweetRepository) TweetService {
 }
 
 func (s *tweetService) FindByCategory(ctx context.Context, category *vo.Category) ([]*entity.TweetEntity, error) {
-	tweetModels, err := s.TweetRepository.FindByCategory(ctx, category)
+	tweetWithTagModels, err := s.TweetRepository.FindByCategory(ctx, category)
 	if err != nil {
 		return nil, err
 	}
 
-	tweetEntities := make([]*entity.TweetEntity, len(tweetModels))
-	for i, m := range tweetModels {
-		tweetEntities[i] = modelToEntity(m)
+	var tweetEntities []*entity.TweetEntity
+	for _, m := range tweetWithTagModels {
+		if tweet, ok := findEntityById(tweetEntities, m.Id); ok {
+			// nullable対応
+			if m.Tag.Valid {
+				tweet.Tags = append(tweet.Tags, m.Tag.String)
+			}
+		} else {
+			tweetEntities = append(tweetEntities, modelToEntity(m))
+		}
 	}
 
 	return tweetEntities, nil
 }
 
-func modelToEntity(m *model.TweetModel) *entity.TweetEntity {
+func findEntityById(list []*entity.TweetEntity, id uint64) (*entity.TweetEntity, bool) {
+	for _, e := range list {
+		if e.Id == id {
+			return e, true
+		}
+	}
+	return nil, false
+}
+
+func modelToEntity(m *model.TweetWithTagModel) *entity.TweetEntity {
 	category, err := vo.NewCategory(m.Category)
 	if err != nil {
-		return nil
-	}
-
-	addDate, err := vo.NewDateTime(m.AddDate)
-	if err != nil {
+		log.Warn(err)
 		return nil
 	}
 
 	url, err := vo.NewURL(m.Url)
 	if err != nil {
+		log.Warn(err)
 		return nil
+	}
+
+	tags := make([]string, 0)
+	if m.Tag.Valid {
+		tags = append(tags, m.Tag.String)
 	}
 
 	createdAt, err := vo.NewDateTime(m.CreatedAt)
 	if err != nil {
+		log.Warn(err)
 		return nil
 	}
 
 	updatedAt, err := vo.NewDateTime(m.UpdatedAt)
 	if err != nil {
+		log.Warn(err)
 		return nil
 	}
 
 	return &entity.TweetEntity{
 		Id:        m.Id,
 		Category:  *category,
-		AddDate:   addDate.ToDateString(),
+		AddDate:   m.AddDate,
 		Url:       *url,
-		Tags:      nil,
+		Tags:      tags,
 		CreatedAt: *createdAt,
 		UpdatedAt: *updatedAt,
 	}

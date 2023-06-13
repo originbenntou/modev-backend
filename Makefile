@@ -13,15 +13,25 @@ setup:
 	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
 	go mod tidy
 
+swagger:
+	docker run --rm --name openapi -d \
+		-p 8081:8080 \
+		-v $(PWD):/tmp \
+		-e SWAGGER_FILE=/tmp/openapi.yaml \
+		--platform=linux/amd64 \
+		--name swagger \
+		swaggerapi/swagger-editor
+	open http://localhost:8081
+
 gen:
 	oapi-codegen -config ./gen/model.config.yaml openapi.yaml
 	oapi-codegen -config ./gen/server.config.yaml openapi.yaml
 
-migrate-create:
+migrate-create-%:
 	docker run \
 		-v ${PWD}/mysql/migrate:/migrations \
 		migrate/migrate \
-		create -ext sql -dir /migrations -seq initialize
+		create -ext sql -dir /migrations -seq $*
 
 migrate-up:
 	docker run \
@@ -32,22 +42,23 @@ migrate-up:
 		-database "${DATABASE}" \
 		up
 
-migrate-drop:
+migrate-down:
 	docker run \
+		-v ${PWD}/mysql/migrate:/migrations \
 		--network modev-backend-network \
 		migrate/migrate \
+		-path=/migrations/ \
+		-database "${DATABASE}" \
+		down
+
+migrate-drop:
+	docker run \
+		-v ${PWD}/mysql/migrate:/migrations \
+		--network modev-backend-network \
+		migrate/migrate \
+		-path=/migrations/ \
 		-database "${DATABASE}" \
 		drop -f
-
-swagger:
-	docker run --rm --name openapi -d \
-		-p 8081:8080 \
-		-v $(PWD):/tmp \
-		-e SWAGGER_FILE=/tmp/openapi.yaml \
-		--platform=linux/amd64 \
-		--name swagger \
-		swaggerapi/swagger-editor
-	open http://localhost:8081
 
 build:
 	docker build -t $(AWS_REPOSITORY) . --platform=linux/amd64

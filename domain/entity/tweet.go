@@ -9,11 +9,7 @@ type TweetEntity struct {
 	Category  vo.Category
 	AddDate   string
 	Url       vo.URL
-	Tags      []vo.Tag
+	Tags      []string
 	CreatedAt vo.DateTime
 	UpdatedAt vo.DateTime
-}
-
-func (t *TweetEntity) ChangeCategory(category vo.Category) {
-	t.Category = category
 }

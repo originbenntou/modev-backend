@@ -5,7 +5,6 @@ import (
 	"net/url"
 )
 
-// URL value object
 type URL struct {
 	Value string
 }
