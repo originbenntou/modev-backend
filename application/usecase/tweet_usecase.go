@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/originbenntou/modev-backend/domain/entity"
 	"github.com/originbenntou/modev-backend/domain/service"
-	vo "github.com/originbenntou/modev-backend/domain/value_object"
+	vo "github.com/originbenntou/modev-backend/domain/vo"
 )
 
 type TweetUseCase interface {

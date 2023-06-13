@@ -6,7 +6,7 @@ import (
 	"github.com/originbenntou/modev-backend/adapter/mysql"
 	"github.com/originbenntou/modev-backend/domain/model"
 	"github.com/originbenntou/modev-backend/domain/repository"
-	vo "github.com/originbenntou/modev-backend/domain/value_object"
+	vo "github.com/originbenntou/modev-backend/domain/vo"
 )
 
 const TableName = "TWEET"

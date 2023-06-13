@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/originbenntou/modev-backend/application/usecase"
-	vo "github.com/originbenntou/modev-backend/domain/value_object"
+	vo "github.com/originbenntou/modev-backend/domain/vo"
 	"github.com/originbenntou/modev-backend/gen"
 	"net/http"
 )

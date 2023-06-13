@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"github.com/originbenntou/modev-backend/domain/model"
-	vo "github.com/originbenntou/modev-backend/domain/value_object"
+	vo "github.com/originbenntou/modev-backend/domain/vo"
 )
 
 type TweetRepository interface {
