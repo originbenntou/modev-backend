@@ -27,6 +27,7 @@ gen:
 	oapi-codegen -config ./gen/model.config.yaml openapi.yaml
 	oapi-codegen -config ./gen/server.config.yaml openapi.yaml
 
+# e.g.
 migrate-create-%:
 	docker run \
 		-v ${PWD}/mysql/migrate:/migrations \
