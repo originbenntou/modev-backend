@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/go-chi/httplog"
-	"github.com/originbenntou/modev-backend/presentation/failure"
+	"github.com/originbenntou/modev-backend/common/failure"
 	"github.com/pkg/errors"
 	"net/http"
 )
